@@ -33,8 +33,25 @@
 # Bonus Extra Credit
 # this will not have you setting up a complete image useful for local development, test, and prod
 # it's just meant to get you started with basic Dockerfile concepts and not focus too much on
-# proper Node.js use in a container. **If you happen to be a Node.js Developer**, then 
-# after you get through more of this course, you should come back and use my 
-# Node Docker Good Defaults sample project on GitHub to change this Dockerfile for 
+# proper Node.js use in a container. **If you happen to be a Node.js Developer**, then
+# after you get through more of this course, you should come back and use my
+# Node Docker Good Defaults sample project on GitHub to change this Dockerfile for
 # better local development with more advanced topics
 # https://github.com/BretFisher/node-docker-good-defaults
+
+FROM node:6.9-alpine
+
+# APP LISTENS ON 3000, BUT CONTAINER LAUNCHES ON PORT 80
+EXPOSE 3000
+
+RUN apk add --update tini && mkdir -p /usr/src/app
+
+WORKDIR /usr/src/app
+
+COPY package.json package.json
+
+RUN npm i && npm cache clean --force
+
+COPY . .
+
+CMD ["/sbin/tini", "--", "node", "./bin/www"]
