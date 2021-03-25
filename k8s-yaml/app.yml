@@ -7,8 +7,10 @@ spec:
   ports:
   - port: 80
   selector:
-    app: app-nginx
+    app: app-nginx # So service can find pods that belong to it
+
 ---
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -17,11 +19,11 @@ spec:
   replicas: 3
   selector:
     matchLabels:
-      app: app-nginx
+      app: app-nginx # So deployment knows which pods belong to it
   template:
     metadata:
       labels:
-        app: app-nginx
+        app: app-nginx # label that the pods will get
     spec:
       containers:
       - name: nginx
